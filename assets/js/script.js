@@ -4,10 +4,7 @@ let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 // Todo: create a function to generate a unique task id
-function generateTaskId(event) {
-  event.preventDefault();
-  console.log("click");
-}
+function generateTaskId() {}
 
 // Todo: create a function to create a task card
 function createTaskCard(task) {}
@@ -25,4 +22,23 @@ function handleDeleteTask(event) {}
 function handleDrop(event, ui) {}
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
-$(document).ready(function () {}); //end of ready
+$(document).ready(function () {
+  // Get references to the modal and the button that triggers it
+  const modal = $(".modal");
+  const modalButton = $(".btn-success");
+
+  // Show the modal when the button is clicked
+  modalButton.on("click", function () {
+    modal.modal("show");
+  });
+
+  // Hide the modal when the close button is clicked
+  $(".close").on("click", function () {
+    modal.modal("hide");
+  });
+
+  // Hide the modal when the "Add Task" button is clicked
+  $(".btn-success").on("click", function () {
+    modal.modal("hide");
+  });
+}); //end of ready
