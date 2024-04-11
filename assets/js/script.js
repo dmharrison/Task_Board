@@ -41,18 +41,17 @@ function createTaskCard(task) {
   cardBody.append(deleteBtn);
   $("#todo-cards").append(taskCard);
 
-  if (taskCard.dueDate && taskCard.status !== "done") {
-    const now = dayjs();
-    const taskDueDate = dayjs(project.dueDate, "DD/MM/YYYY");
+  const now = dayjs();
+  const taskDueDate = dayjs(task.Date, "DD/MM/YYYY");
 
-    // ? If the task is due today, make the card yellow. If it is overdue, make it red.
-    if (now.isSame(taskDueDate, "day")) {
-      taskCard.addClass("bg-warning text-white");
-    } else if (now.isAfter(taskDueDate)) {
-      taskCard.addClass("bg-danger text-white");
-      cardDeleteBtn.addClass("border-light");
-    }
+  // ? If the task is due today, make the card yellow. If it is overdue, make it red.
+  if (now.isSame(taskDueDate, "day")) {
+    taskCard.addClass("bg-warning text-white");
+  } else if (now.isAfter(taskDueDate)) {
+    taskCard.addClass("bg-danger text-white");
+    cardDeleteBtn.addClass("border-light");
   }
+
   return taskCard;
 }
 
@@ -64,13 +63,26 @@ function renderTaskList() {
 }
 
 // Todo: create a function to handle adding a new task
-function handleAddTask(event) {}
+function handleAddTask(event) {
+  let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
+  let newTask = {
+    title: taskTitleInput.val(),
+    date: dueDateInput.val(),
+    description: taskDescripInput.val(),
+  };
+  taskList.push(newTask);
+  localStorage.setItem("tasks", JSON.stringify(taskList));
+  createTaskCard(newTask);
+  $("#add-task-btn").on("click", function () {
+    handleAddTask();
+  });
+}
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event) {
   const taskCard = $(event.target).closest(".card");
   const taskId = taskCard.attr("id");
-  //remove tas card
+  //remove task card
   taskCard.remove();
   // Update the tasks array by excluding the deleted task
   let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -83,19 +95,7 @@ function handleDeleteTask(event) {
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
   //make card body droppable
-  $(".card-body").droppable({
-    drop: function (event, ui) {
-      // Get the dropped task and the lane where it was dropped
-      const droppedTask = ui.draggable;
-      const droppedLane = $(this);
-
-      // Update the task's status based on the dropped lane
-      // You can implement logic here to update the task status or perform any other actions
-      // For example, you can change the task's status to match the dropped lane's status
-
-      // Update UI or perform any other necessary actions
-    },
-  });
+  $(".card-body").droppable({});
 
   $(function () {
     $("#droppable").droppable({
@@ -108,6 +108,10 @@ function handleDrop(event, ui) {
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
+  $(function () {
+    console.log("ready!");
+  });
+
   // Get references to the modal and the button that triggers it
   const modal = $("#formModal");
   const modalButton = $("#home-add-task");
