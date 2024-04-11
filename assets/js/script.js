@@ -44,7 +44,7 @@ function createTaskCard(task) {
   const now = dayjs();
   const taskDueDate = dayjs(task.Date, "DD/MM/YYYY");
 
-  // ? If the task is due today, make the card yellow. If it is overdue, make it red.
+  //  If the task is due today, make the card yellow. If it is overdue, make it red.
   if (now.isSame(taskDueDate, "day")) {
     taskCard.addClass("bg-warning text-white");
   } else if (now.isAfter(taskDueDate)) {
@@ -86,7 +86,9 @@ function handleDeleteTask(event) {
   taskCard.remove();
   // Update the tasks array by excluding the deleted task
   let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
-  taskList = taskList.filter((task) => task.id !== taskId);
+  taskList = taskList.filter(function (task) {
+    return task.id !== taskId;
+  });
 
   // Save the updated tasks array back to Local Storage
   localStorage.setItem("tasks", JSON.stringify(taskList));
@@ -94,15 +96,15 @@ function handleDeleteTask(event) {
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-  //make card body droppable
-  $(".card-body").droppable({});
-
-  $(function () {
-    $("#droppable").droppable({
-      drop: function (event, ui) {
-        $(this).addClass("ui-state-highlight").find("p").html("Dropped!");
-      },
-    });
+  //make the lanes droppable
+  $("#to-do").droppable({
+    accept: ".card",
+  });
+  $("#in-progress").droppable({
+    accept: ".card",
+  });
+  $("#done").droppable({
+    accept: ".card",
   });
 }
 
@@ -134,18 +136,8 @@ $(document).ready(function () {
   $(".btn-success").on("click", function () {
     modal.modal("hide");
   });
-
   $("#add-task-btn").on("click", function () {
-    console.log("is working");
-    let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
-    let newTask = {
-      title: taskTitleInput.val(),
-      date: dueDateInput.val(),
-      description: taskDescripInput.val(),
-    };
-    taskList.push(newTask);
-    //save the updated tasks array back to local storage
-    localStorage.setItem("tasks", JSON.stringify(taskList));
-    createTaskCard(newTask);
+    handleAddTask();
   });
+  handleDrop();
 }); //end of ready
