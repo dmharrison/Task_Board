@@ -1,23 +1,41 @@
 console.log("you are linked");
 // Retrieve tasks and nextId from localStorage
-// let taskList = JSON.parse(localStorage.getItem("tasks"));
-// let nextId = JSON.parse(localStorage.getItem("nextId"));
+let taskList = JSON.parse(localStorage.getItem("tasks"));
+let nextId = JSON.parse(localStorage.getItem("nextId")) || 1;
 //query selectors for the correlating info to be stored
 const taskTitleInput = $("#task-title");
 const dueDateInput = $("#task-due-date");
 const taskDescripInput = $("#task-description");
-// const modal = $("#formModal");
-// const modalButton = $(".btn-success");
+
 // Todo: create a function to generate a unique task id
-function generateTaskId() {}
+function generateTaskId() {
+  return nextId++;
+}
 
 // Todo: create a function to create a task card
 function createTaskCard(task) {
   // create a new div element to rep  the task card
+  const taskCard = $("<div>");
+  taskCard.attr("id,#draggable");
+  const cardHeader = $("<div>").addClass("card-header").text(task.title);
+  const cardBody = $("<div>").addClass("card-body");
+  const cardTitle = $("<p>").addClass("card-title").text(task.title);
+  const cardText = $("<p>").addClass("card-text").text(task.description);
+  //attach all the elements
+  cardBody.append(cardTitle);
+  cardBody.append(cardText);
+  taskCard.append(cardHeader);
+  taskCard.append(cardBody);
+  $("body").append(taskCard);
+  return taskCard;
 }
 
 // Todo: create a function to render the task list and make cards draggable
-function renderTaskList() {}
+function renderTaskList() {
+  $(function () {
+    $("#draggable").draggable();
+  });
+}
 
 // Todo: create a function to handle adding a new task
 function handleAddTask(event) {}
@@ -31,8 +49,8 @@ function handleDrop(event, ui) {}
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
   // Get references to the modal and the button that triggers it
-  const modal = $(".modal");
-  const modalButton = $(".btn-success");
+  const modal = $("#formModal");
+  const modalButton = $("#home-add-task");
   console.log(modal);
   console.log(modalButton);
 
@@ -53,15 +71,21 @@ $(document).ready(function () {
     modal.modal("hide");
   });
 
-  $(".btn-success").on("click", function () {
-    let addTask = JSON.parse(localStorage.getItem("tasks")) || [];
-    const modalInputs = {
+  $("#add-task-btn").on("click", function () {
+    console.log("is working");
+    let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
+    let newTask = {
       title: taskTitleInput.val(),
       date: dueDateInput.val(),
       description: taskDescripInput.val(),
     };
-    addTask.push(modalInputs);
+    taskList.push(newTask);
     //save the updated tasks array back to local storage
-    localStorage.setItem("tasks", JSON.stringify());
+    localStorage.setItem("tasks", JSON.stringify(taskList));
+    createTaskCard();
+    const createTaskCard = function () {
+      const taskList = JSON.parse(localStorage.getItem("tasks")) || [];
+      let task = $("#taskCard");
+    };
   });
 }); //end of ready
