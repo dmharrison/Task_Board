@@ -16,17 +16,24 @@ function generateTaskId() {
 function createTaskCard(task) {
   // create a new div element to rep  the task card
   const taskCard = $("<div>");
-  taskCard.attr("id,#draggable");
+  taskCard.attr("id", "draggable").draggable();
   const cardHeader = $("<div>").addClass("card-header").text(task.title);
   const cardBody = $("<div>").addClass("card-body");
-  const cardTitle = $("<p>").addClass("card-title").text(task.title);
   const cardText = $("<p>").addClass("card-text").text(task.description);
+  const cardDate = $("<p>").addClass("card-date").text(task.date);
+  const deleteBtn = $("<button/>", {
+    text: "Delete",
+    click: function () {
+      $(this).closest(".task-card").remove();
+    },
+  });
   //attach all the elements
-  cardBody.append(cardTitle);
   cardBody.append(cardText);
+  cardBody.append(cardDate);
   taskCard.append(cardHeader);
   taskCard.append(cardBody);
-  $("body").append(taskCard);
+  cardBody.append(deleteBtn);
+  $("#todo-cards").append(taskCard);
   return taskCard;
 }
 
@@ -82,10 +89,6 @@ $(document).ready(function () {
     taskList.push(newTask);
     //save the updated tasks array back to local storage
     localStorage.setItem("tasks", JSON.stringify(taskList));
-    createTaskCard();
-    const createTaskCard = function () {
-      const taskList = JSON.parse(localStorage.getItem("tasks")) || [];
-      let task = $("#taskCard");
-    };
+    createTaskCard(newTask);
   });
 }); //end of ready
